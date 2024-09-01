@@ -1,4 +1,4 @@
-package redsmsclient
+package redsms
 
 type ContextKey string
 

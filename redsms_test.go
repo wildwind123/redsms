@@ -1,4 +1,4 @@
-package redsmsclient
+package redsms
 
 import (
 	"context"
