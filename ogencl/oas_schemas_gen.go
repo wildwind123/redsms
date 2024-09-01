@@ -130,10 +130,11 @@ func (s *ClientInfo) SetOverdraftExpiration(val OptInt64) {
 }
 
 type Error struct {
-	ErrorMessage OptString `json:"error_message"`
-	Ips          []string  `json:"ips"`
-	Locale       OptString `json:"locale"`
-	Success      OptBool   `json:"success"`
+	ErrorMessage OptString  `json:"error_message"`
+	Ips          []string   `json:"ips"`
+	Locale       OptString  `json:"locale"`
+	Success      OptBool    `json:"success"`
+	Balance      OptFloat64 `json:"balance"`
 }
 
 // GetErrorMessage returns the value of ErrorMessage.
@@ -156,6 +157,11 @@ func (s *Error) GetSuccess() OptBool {
 	return s.Success
 }
 
+// GetBalance returns the value of Balance.
+func (s *Error) GetBalance() OptFloat64 {
+	return s.Balance
+}
+
 // SetErrorMessage sets the value of ErrorMessage.
 func (s *Error) SetErrorMessage(val OptString) {
 	s.ErrorMessage = val
@@ -174,6 +180,11 @@ func (s *Error) SetLocale(val OptString) {
 // SetSuccess sets the value of Success.
 func (s *Error) SetSuccess(val OptBool) {
 	s.Success = val
+}
+
+// SetBalance sets the value of Balance.
+func (s *Error) SetBalance(val OptFloat64) {
+	s.Balance = val
 }
 
 // ErrorStatusCode wraps Error with StatusCode.

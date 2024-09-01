@@ -116,6 +116,9 @@ components:
                 type: string
               success:
                 type: boolean
+              balance:
+                type: number
+                format: float64
 
   schemas:
     Request:

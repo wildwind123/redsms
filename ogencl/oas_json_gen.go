@@ -375,13 +375,20 @@ func (s *Error) encodeFields(e *jx.Encoder) {
 			s.Success.Encode(e)
 		}
 	}
+	{
+		if s.Balance.Set {
+			e.FieldStart("balance")
+			s.Balance.Encode(e)
+		}
+	}
 }
 
-var jsonFieldsNameOfError = [4]string{
+var jsonFieldsNameOfError = [5]string{
 	0: "error_message",
 	1: "ips",
 	2: "locale",
 	3: "success",
+	4: "balance",
 }
 
 // Decode decodes Error from json.
@@ -440,6 +447,16 @@ func (s *Error) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"success\"")
+			}
+		case "balance":
+			if err := func() error {
+				s.Balance.Reset()
+				if err := s.Balance.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"balance\"")
 			}
 		default:
 			return d.Skip()
