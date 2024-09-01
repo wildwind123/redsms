@@ -1,0 +1,233 @@
+openapi: "3.1.0"
+info:
+  version: 1.0.0
+  title: redsms
+
+paths:
+  /api/message:
+    post:
+      security:
+        - Login: []
+          Secret: []
+      parameters:
+        - in: header
+          required: true
+          name: Ts
+          schema:
+            type: string
+      description: ""
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref:  "#/components/schemas/Result"
+        default:
+          $ref: "#/components/responses/Error"
+  /api/message/{uuid}:
+    get:
+      security:
+        - Login: []
+          Secret: []
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+        - in: header
+          required: true
+          name: Ts
+          schema:
+            type: string
+      description: ""
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref:  "#/components/schemas/Result"
+        default:
+          $ref: "#/components/responses/Error"
+  /api/client/info:
+    get:
+      security:
+        - Login: []
+          Secret: []
+      parameters:
+        - in: header
+          required: true
+          name: Ts
+          schema:
+            type: string
+      description: ""
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [info, success]
+                properties:
+                  info:
+                    $ref:  "#/components/schemas/ClientInfo"
+                  success:
+                    type: boolean
+        default:
+          $ref: "#/components/responses/Error"
+components:
+  securitySchemes:
+    Login:
+      type: apiKey
+      name: Login
+      in: header
+      description: |
+        Имя пользователя redsms
+    Secret:
+      type: apiKey
+      name: Secret
+      in: header
+      description: |
+        Авторизация  \
+        https://docs.redsms.ru/http/getting-started/
+  responses:
+    Error:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error_message:
+                type: string
+              ips:
+                type: array
+                items:
+                  type: string
+              locale:
+                type: string
+              success:
+                type: boolean
+
+  schemas:
+    Request:
+      type: object
+      required: [route, to]
+      properties:
+        route:
+          $ref: "#/components/schemas/Route"
+        to:
+          type: string
+        text:
+          type: string
+        validity:
+          type: integer
+    Item:
+      type: object
+      properties:
+        uuid:
+          type: string
+        status:
+          $ref: "#/components/schemas/Status"
+        status_time:
+          type: integer
+          format: unix/unix-seconds
+        to:
+          type: string
+        text:
+          type: string
+        price: 
+          type: number
+    ResultError:
+      type: object
+      properties:
+        to:
+          type: string
+        message:
+          type: string
+
+    Result:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResultError"
+        count:
+          type: integer
+          format: int64
+        success:
+          type: boolean
+    ResultMessageStatus:
+      type: object
+      properties:
+        item:
+          $ref: "#/components/schemas/Item"
+        success:
+          type: boolean
+    ClientInfo:
+      type: object
+      required: [login,balance,active]
+      properties:
+        login: 
+          type: string
+        balance:
+          type: number
+          format: float64
+        active:
+          type: boolean
+        monthLimitAmount:
+          type: string
+        currentMonthAmount:
+          type: number
+        restOfMonthLimit:
+          type: number
+        overdraft:
+          type: number
+        overdraftExpiration:
+          type: integer
+          format: int64
+
+    Route:
+      type: string
+      enum:
+        - sms
+        - viber
+        - vk
+        - ok
+        - voice
+        - fcall
+        - hlr
+        - ping
+        - pushok
+    Status:
+      type: string
+      enum:
+        - created
+        - moderation
+        - reject
+        - delivered
+        - read
+        - reply
+        - undelivered
+        - timeout
+        - progress
+        - no_money
+        - doubled
+        - limit_exceeded
+        - bad_number
+        - stop_list
+        - route_closed
+        - error
