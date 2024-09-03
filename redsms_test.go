@@ -119,7 +119,7 @@ func TestMessageStatus(t *testing.T) {
 	ctx := context.Background()
 
 	res, err := cl.APIMessageUUIDGet(ctx, ogencl.APIMessageUUIDGetParams{
-		UUID: "0a30cb42-682c-11ef-9029-0242c0a86496",
+		UUID: "55197d7c-69e2-11ef-be42-0242c0a86496",
 	})
 
 	responseError := &ogencl.ErrorStatusCode{}
